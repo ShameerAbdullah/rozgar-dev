@@ -19,7 +19,8 @@ import {
 } from "@mui/material";
 import { Building2, MapPin, Banknote, Search as SearchIcon } from "lucide-react";
 import { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
+import Appbar from "../components/Appbar";
+import Footer from "../components/footer";
 
 export default function Jobs() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -139,10 +140,10 @@ export default function Jobs() {
   };
 
   return (
-    <div className="bg-white text-gray-800 min-h-screen">
-      <Navbar handleOpenDialog={handleOpenDialog} />
-      <Box sx={{ height: { xs: "4rem", lg: "5rem" } }} />
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+    <div className="bg-white text-gray-800 min-h-screen flex flex-col">
+      <Appbar />
+      <div className="flex-1 mt-10 lg:mt-20">
+      <Container maxWidth="lg" sx={{ marginBottom: 2 }}>
         {/* Filters Section */}
         <Card sx={{ mb: 4, p: 3 }}>
           <Grid container spacing={2} alignItems="center">
@@ -357,6 +358,8 @@ export default function Jobs() {
           </Grid>
         )}
       </Container>
+      </div>
+      <Footer />
     </div>
   );
 }

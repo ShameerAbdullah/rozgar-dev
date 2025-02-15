@@ -9,36 +9,19 @@ export default function Navbar() {
       sx={{
         backgroundColor: "#f9fafb",
         color: "black",
-        boxShadow: "none",
+        boxShadow: "xs",
         position: { xs: "relative", lg: "fixed" },
       }}
     >
       <Container>
-        <Toolbar disableGutters className="flex justify-between items-center">
-          <Link href="/" className="no-underline">
-          <img src="/navbar.svg" alt="Header Logo" className="h-8" />
-          {/* <Typography
-              variant="h6"
-              component="div"
-              sx={{
-                fontWeight: "800",
-                fontSize: "1.5rem",
-                display: "flex",
-                alignItems: "center",
-              }}
-              className="bg-black text-transparent bg-clip-text cursor-pointer"
-            >
-              <img
-                src="/icon.png"
-                alt="Logo"
-                className="mx-1"
-                style={{ height: 30 }}
-              />
-              ROZGAR
-            </Typography> */}
-          </Link>
+        <Toolbar disableGutters className="flex justify-between items-center relative">
+          <div className="absolute left-1/2 transform -translate-x-1/2 sm:static sm:translate-x-0">
+            <Link href="/" className="no-underline">
+              <img src="/navbar.svg" alt="Header Logo" className="h-8" />
+            </Link>
+          </div>
 
-          <div className="hidden sm:flex items-center gap-6">
+          <div className="hidden sm:flex items-center gap-6 ml-auto">
             <Link href="/" className="no-underline">
               <Typography
                 variant="body1"

@@ -96,7 +96,7 @@ export default function Home() {
       <Navbar />
       <section
         id="home"
-        className="flex justify-center items-center py-12 h-auto lg:h-screen lg:mt-0"
+        className="flex justify-center items-center py-12 h-auto lg:h-screen pt-10 lg:pt-0"
         style={{
           backgroundImage: "url('/bg1.jpg')",
         }}
