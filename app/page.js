@@ -17,8 +17,6 @@ import {
   Typography,
   Container,
   Grid,
-  AppBar,
-  Toolbar,
   Button,
   Box,
 } from "@mui/material";
@@ -34,6 +32,7 @@ export default function Home() {
       title: "AI Job Recommendations",
       description:
         "Get personalized job matches based on your skills and experience with real-time updates.",
+      url: "/jobs/match",
     },
     {
       id: 2,
@@ -41,6 +40,7 @@ export default function Home() {
       title: "Resume Scoring & ATS Optimization",
       description:
         "Advanced ATS compatibility check with detailed improvement suggestions.",
+      url: "/ats",
     },
     {
       id: 3,
@@ -48,11 +48,12 @@ export default function Home() {
       title: "Job Description Match",
       description:
         "Real-time resume comparison with job posts and skills gap analysis.",
+      url: "/jobs",
     },
     {
       id: 4,
       logo: <Search size={30} className="mx-auto text-[#4b8b93]" />,
-      title: "AI-Powered Job Search",
+      title: "Job Search",
       description:
         "Natural language search capabilities with smart filters for industry and role.",
     },
@@ -73,6 +74,7 @@ export default function Home() {
       logo: <Upload size={30} className="mx-auto text-black" />,
       title: "Upload Your Resume",
       description: "Quick profile creation with instant skills analysis.",
+      url: "/jobs/match",
     },
     {
       id: 2,
@@ -131,40 +133,59 @@ export default function Home() {
               </Typography>
 
               <Link href="/jobs" passHref>
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: "#4b8b93",
-                  color: "white",
-                  fontWeight: "bold",
-                  marginTop: 2,
-                  marginRight: 2,
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "#397a7f",
-                  },
-                }}
-              >
-                Explore Jobs
-              </Button>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#4b8b93",
+                    color: "white",
+                    fontWeight: "bold",
+                    marginTop: 2,
+                    marginRight: 2,
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "#397a7f",
+                    },
+                  }}
+                >
+                  Explore Jobs
+                </Button>
               </Link>
 
               <Link href="/ats" passHref>
-              <Button
-                variant="outlined"
-                sx={{
-                  color: "#4b8b93",
-                  fontWeight: "bold",
-                  marginTop: 2,
-                  textTransform: "none",
-                  transition: "transform 0.3s",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
-                ATS Score
-              </Button>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: "#4b8b93",
+                    fontWeight: "bold",
+                    marginTop: 2,
+                    marginRight: 2,
+                    textTransform: "none",
+                    transition: "transform 0.3s",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                >
+                  ATS Score
+                </Button>
+              </Link>
+
+              <Link href="/jobs/match" passHref>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: "#4b8b93",
+                    fontWeight: "bold",
+                    marginTop: 2,
+                    textTransform: "none",
+                    transition: "transform 0.3s",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                >
+                  Job Match
+                </Button>
               </Link>
             </div>
 
@@ -172,8 +193,10 @@ export default function Home() {
               <Image
                 src="/logo.png"
                 alt="AI Job Search"
-                layout="fill"
-                objectFit="contain"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                style={{ objectFit: "contain" }}
+                priority
               />
             </div>
           </div>
@@ -203,7 +226,7 @@ export default function Home() {
             justifyContent="center"
             alignItems="center"
           >
-            {features.map(({ id, logo, title, description }, index) => {
+            {features.map(({ id, logo, title, description, url }, index) => {
               const isActive = isLargeScreen && activeFeature === index;
 
               return (
@@ -218,72 +241,73 @@ export default function Home() {
                     justifyContent: "center",
                   }}
                 >
-                  <Card
-                    sx={{
-                      height: "16rem",
-                      width: "100%",
-                      maxWidth: "300px",
-                      transition:
-                        "transform 0.5s ease, background-color 0.5s ease, color 0.5s ease",
-                      backgroundColor: isActive ? "#4b8b93" : "#ffffff",
-                      color: isActive ? "white" : "black",
-                      boxShadow: 3,
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      transform: isActive ? "scale(1.05)" : "scale(1)",
-                    }}
-                  >
-                    <CardContent
+                  <Link href={url || "#"} passHref>
+                    <Card
                       sx={{
-                        textAlign: "center",
-                        padding: 3,
+                        height: "16rem",
+                        width: "100%",
+                        maxWidth: "300px",
+                        transition:
+                          "transform 0.5s ease, background-color 0.5s ease, color 0.5s ease",
+                        backgroundColor: isActive ? "#4b8b93" : "#ffffff",
+                        color: isActive ? "white" : "black",
+                        boxShadow: 3,
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        transform: isActive ? "scale(1.05)" : "scale(1)",
                       }}
                     >
-                      <Box
+                      <CardContent
                         sx={{
-                          borderRadius: "50%",
-                          padding: 2,
-                          display: "inline-flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          backgroundColor: isActive
-                            ? "white"
-                            : "rgb(243, 244, 246)",
-                          transition: "background-color 0.5s ease",
+                          textAlign: "center",
+                          padding: 3,
                         }}
                       >
-                        {logo}
-                      </Box>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontWeight: "bold",
-                          marginTop: 2,
-                          transition: "color 0.5s ease",
-                          color: isActive ? "white" : "black",
-                        }}
-                      >
-                        {title}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          marginTop: 1,
-                          transition: "color 0.5s ease",
-                          color: isActive ? "white" : "gray",
-                        }}
-                      >
-                        {description}
-                      </Typography>
-                    </CardContent>
-                  </Card>
+                        <Box
+                          sx={{
+                            borderRadius: "50%",
+                            padding: 2,
+                            display: "inline-flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: isActive
+                              ? "white"
+                              : "rgb(243, 244, 246)",
+                            transition: "background-color 0.5s ease",
+                          }}
+                        >
+                          {logo}
+                        </Box>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: "bold",
+                            marginTop: 2,
+                            transition: "color 0.5s ease",
+                            color: isActive ? "white" : "black",
+                          }}
+                        >
+                          {title}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            marginTop: 1,
+                            transition: "color 0.5s ease",
+                            color: isActive ? "white" : "gray",
+                          }}
+                        >
+                          {description}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </Grid>
               );
             })}
           </Grid>
         </Container>
       </section>
-      ;
       <section
         id="how-it-works"
         className="bg-cover bg-center bg-no-repeat py-12 lg:h-screen flex justify-center items-center"
@@ -303,42 +327,44 @@ export default function Home() {
           </Typography>
 
           <Grid container spacing={4} justifyContent="center">
-            {howItWorks.map(({ id, logo, title, description }) => (
+            {howItWorks.map(({ id, logo, title, description, url }) => (
               <Grid item xs={12} sm={6} md={4} key={id}>
-                <Card
-                  className="h-60 bg-white cursor-pointer mx-auto"
-                  sx={{
-                    boxShadow: 10,
-                    backdropFilter: "blur(1px)",
-                    borderRadius: "10px",
-                    width: "90%",
-                    maxWidth: "280px",
-                    transition: "transform 0.3s",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                >
-                  <CardContent className="text-center p-6">
-                    <div className="bg-gray-50 rounded-full p-3 inline-flex justify-center items-center">
-                      {logo}
-                    </div>
-                    <Typography
-                      variant="h5"
-                      className="text-black mt-4"
-                      sx={{ fontWeight: "bold", marginTop: "1rem" }}
-                    >
-                      {title}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      className="text-gray-700"
-                      sx={{ marginTop: "1rem" }}
-                    >
-                      {description}
-                    </Typography>
-                  </CardContent>
-                </Card>
+                <Link href={url || "#"} passHref>
+                  <Card
+                    className="h-60 bg-white cursor-pointer mx-auto"
+                    sx={{
+                      boxShadow: 10,
+                      backdropFilter: "blur(1px)",
+                      borderRadius: "10px",
+                      width: "90%",
+                      maxWidth: "280px",
+                      transition: "transform 0.3s",
+                      "&:hover": {
+                        transform: "scale(1.05)",
+                      },
+                    }}
+                  >
+                    <CardContent className="text-center p-6">
+                      <div className="bg-gray-50 rounded-full p-3 inline-flex justify-center items-center">
+                        {logo}
+                      </div>
+                      <Typography
+                        variant="h5"
+                        className="text-black mt-4"
+                        sx={{ fontWeight: "bold", marginTop: "1rem" }}
+                      >
+                        {title}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        className="text-gray-700"
+                        sx={{ marginTop: "1rem" }}
+                      >
+                        {description}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Link>
               </Grid>
             ))}
           </Grid>
