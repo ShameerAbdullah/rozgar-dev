@@ -139,9 +139,9 @@ export async function POST(req) {
             };
         });
 
-        // Filter jobs with at least 20% match and sort by match score
+        // Filter jobs with at least 30% match and sort by match score
         const filteredJobs = scoredJobs
-            .filter(job => job.matchScore >= 20)
+            .filter(job => job.matchScore >= 30)
             .sort((a, b) => b.matchScore - a.matchScore);
 
         return NextResponse.json({

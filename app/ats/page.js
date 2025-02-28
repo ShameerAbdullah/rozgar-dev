@@ -1,56 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Appbar from "../components/Appbar";
 import {
   CircularProgressbarWithChildren,
   buildStyles,
 } from "react-circular-progressbar";
-import { CircularProgress, Box, Button } from "@mui/material";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { CircularProgress, Container, Box, Typography, Grid, Paper, Chip } from "@mui/material";
 import "react-circular-progressbar/dist/styles.css";
 import Footer from "../components/footer";
-import { useRouter } from "next/navigation";
 
 export default function ATS() {
-  const router = useRouter();
   const [file, setFile] = useState(null);
   const [atsScore, setAtsScore] = useState(null);
   const [suggestions, setSuggestions] = useState("");
+  const [skills, setSkills] = useState([]);
+  const [education, setEducation] = useState("");
+  const [experience, setExperience] = useState(0);
+  const [keywords, setKeywords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [matchedJobs, setMatchedJobs] = useState([]);
-
-  // Load state from localStorage on component mount
-  useEffect(() => {
-    const savedState = localStorage.getItem('atsPageState');
-    if (savedState) {
-      const { atsScore, suggestions, matchedJobs } = JSON.parse(savedState);
-      setAtsScore(atsScore);
-      setSuggestions(suggestions);
-      setMatchedJobs(matchedJobs);
-    }
-  }, []);
-
-  // Save state to localStorage whenever it changes
-  useEffect(() => {
-    if (atsScore !== null || suggestions || matchedJobs.length > 0) {
-      localStorage.setItem('atsPageState', JSON.stringify({
-        atsScore,
-        suggestions,
-        matchedJobs
-      }));
-    }
-  }, [atsScore, suggestions, matchedJobs]);
-
-  const resetState = () => {
-    setFile(null);
-    setAtsScore(null);
-    setSuggestions("");
-    setIsLoading(false);
-    setMatchedJobs([]);
-    localStorage.removeItem('atsPageState');
-  };
 
   const onDrop = async (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -98,38 +67,15 @@ export default function ATS() {
       if (response.ok) {
         setAtsScore(data.score);
         setSuggestions(data.suggestions);
-        
-        // Extract skills and other information from ATS response
-        const extractedInfo = {
-          skills: data.skills || [],
-          education: data.education || '',
-          experience: data.experience || 0,
-          keywords: data.keywords || []
-        };
-
-        // Fetch matching jobs
-        const jobsResponse = await fetch("/api/jobs/match", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(extractedInfo),
-        });
-
-        const jobsData = await jobsResponse.json();
-        if (jobsResponse.ok) {
-          setMatchedJobs(jobsData.data);
-        }
+        setSkills(data.skills);
+        setEducation(data.education);
+        setExperience(data.experience);
+        setKeywords(data.keywords);
       }
     } catch (error) {
       console.error("Error:", error);
     }
     setIsLoading(false);
-  };
-
-  const handleViewDetails = (jobId) => {
-    // Navigate to job details while preserving state
-    router.push(`/jobs/${jobId}`);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -141,12 +87,12 @@ export default function ATS() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Appbar />
-      <div className="container mx-auto px-4 pt-24 pb-12">
+      <Container className="flex-1 flex flex-col justify-center items-center py-12">
         <div
           {...getRootProps()}
-          className={`border-2 border-dashed rounded-lg p-6 text-center ${
+          className={`border-2 border-dashed rounded-lg p-6 text-center w-full max-w-lg ${
             isDragActive ? "border-[#4B8B93]" : "border-gray-300"
           } cursor-pointer hover:border-[#4B8B93] transition-colors duration-200`}
         >
@@ -168,83 +114,82 @@ export default function ATS() {
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between mt-8 gap-8">
-          {atsScore !== null && !isLoading && (
-            <div className="flex flex-col items-center bg-white p-6 rounded-lg shadow-sm w-full md:w-1/3">
-              <div style={{ width: 180, height: 180 }}>
-                <CircularProgressbarWithChildren
-                  value={atsScore}
-                  styles={buildStyles({
-                    rotation: 0,
-                    strokeLinecap: "round",
-                    textSize: "16px",
-                    pathTransitionDuration: 0.5,
-                    pathColor: "#4B8B93",
-                    textColor: "#4B8B93",
-                    trailColor: "#d6d6d6",
-                    backgroundColor: "#3e98c7",
-                  })}
-                >
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-800">{atsScore}%</div>
-                    <div className="text-gray-600">ATS Score</div>
-                  </div>
-                </CircularProgressbarWithChildren>
-              </div>
-              {suggestions && (
-                <div className="mt-6 w-full">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">Suggestions</h3>
-                  <p className="text-gray-600 text-sm">{suggestions}</p>
+        {atsScore !== null && !isLoading && (
+          <Box className="flex flex-col items-center bg-white p-6 rounded-lg shadow-sm w-full max-w-lg mt-8">
+            <div style={{ width: 180, height: 180 }}>
+              <CircularProgressbarWithChildren
+                value={atsScore}
+                styles={buildStyles({
+                  rotation: 0,
+                  strokeLinecap: "round",
+                  textSize: "16px",
+                  pathTransitionDuration: 0.5,
+                  pathColor: "#4B8B93",
+                  textColor: "#4B8B93",
+                  trailColor: "#d6d6d6",
+                  backgroundColor: "#3e98c7",
+                })}
+              >
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-gray-800">{atsScore}%</div>
+                  <div className="text-gray-600">ATS Score</div>
                 </div>
-              )}
+              </CircularProgressbarWithChildren>
             </div>
-          )}
+            {suggestions && (
+              <Box className="mt-6 w-full">
+                <Typography variant="h6" className="text-gray-800 mb-2">Suggestions</Typography>
+                <Typography className="text-gray-600 text-sm">{suggestions}</Typography>
+              </Box>
+            )}
+          </Box>
+        )}
 
-          {matchedJobs.length > 0 && (
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Matching Jobs Based on Your CV</h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {matchedJobs.map((job) => (
-                  <div
-                    key={job._id}
-                    className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100"
-                    onClick={() => handleViewDetails(job._id)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          {job.title}
-                        </h3>
-                        <p className="text-gray-600">{job.company_name}</p>
-                      </div>
-                      <div className="bg-[#4B8B93] bg-opacity-10 px-3 py-1 rounded-full">
-                        <span className="text-[#4B8B93] font-medium">
-                          {job.matchScore}% Match
-                        </span>
-                      </div>
-                    </div>
-                    <p className="text-gray-600 flex items-center mb-3">
-                      <LocationOnIcon sx={{ fontSize: 18, marginRight: 0.5 }} />
-                      {job.location}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {job.required_skills.slice(0, 3).map((skill, index) => (
-                        <span
-                          key={index}
-                          className="bg-gray-50 text-gray-700 px-3 py-1 rounded-full text-sm"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+        {atsScore !== null && !isLoading && (
+          <Grid container spacing={4} className="mt-8">
+            <Grid item xs={12} md={6}>
+              <Paper className="p-4">
+                <Typography variant="h6" className="text-gray-800 mb-2">Skills</Typography>
+                {skills.length > 0 ? (
+                  <Box className="flex flex-wrap gap-2">
+                    {skills.map((skill, index) => (
+                      <Chip key={index} label={skill} color="primary" />
+                    ))}
+                  </Box>
+                ) : (
+                  <Typography className="text-gray-600">No skills found</Typography>
+                )}
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Paper className="p-4">
+                <Typography variant="h6" className="text-gray-800 mb-2">Education</Typography>
+                <Typography className="text-gray-600">{education || "No education information found"}</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Paper className="p-4">
+                <Typography variant="h6" className="text-gray-800 mb-2">Experience</Typography>
+                <Typography className="text-gray-600">{experience} years</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Paper className="p-4">
+                <Typography variant="h6" className="text-gray-800 mb-2">Keywords</Typography>
+                {keywords.length > 0 ? (
+                  <Box className="flex flex-wrap gap-2">
+                    {keywords.map((keyword, index) => (
+                      <Chip key={index} label={keyword} color="secondary" />
+                    ))}
+                  </Box>
+                ) : (
+                  <Typography className="text-gray-600">No keywords found</Typography>
+                )}
+              </Paper>
+            </Grid>
+          </Grid>
+        )}
+      </Container>
       <Footer />
     </div>
   );
